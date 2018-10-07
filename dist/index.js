@@ -7,7 +7,25 @@ var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefau
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = void 0;
+Object.defineProperty(exports, "reactReduxFirebase", {
+  enumerable: true,
+  get: function get() {
+    return _reactReduxFirebase.reactReduxFirebase;
+  }
+});
+Object.defineProperty(exports, "firebaseStateReducer", {
+  enumerable: true,
+  get: function get() {
+    return _reactReduxFirebase.firebaseStateReducer;
+  }
+});
+Object.defineProperty(exports, "getFirebase", {
+  enumerable: true,
+  get: function get() {
+    return _reactReduxFirebase.getFirebase;
+  }
+});
+exports.firebaseConnect = void 0;
 
 var _extends2 = _interopRequireDefault(require("@babel/runtime/helpers/extends"));
 
@@ -70,7 +88,10 @@ var getDisplayName = function getDisplayName(Component) {
 
 var firebaseConnect = function firebaseConnect() {
   var dataOrFn = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+  var connect = arguments.length > 1 ? arguments[1] : undefined;
   return function (WrappedComponent) {
+    var connectListeners = {};
+
     var FirebaseConnect =
     /*#__PURE__*/
     function (_Component) {
@@ -122,6 +143,11 @@ var firebaseConnect = function firebaseConnect() {
                 path = _prevData$propName.path,
                 defaultValue = _prevData$propName.defaultValue;
             var resolvedPropValue = (0, _reactReduxFirebase.dataToJS)(state.firebase, path);
+
+            connectListeners[propName] = function (state) {
+              return (0, _reactReduxFirebase.dataToJS)(state.firebase, path);
+            };
+
             var loadedPropName = "isLoaded".concat(propName[0].toUpperCase()).concat(propName.substr(1));
             var isLoadedPropValue = stateProps[loadedPropName] || (0, _reactReduxFirebase.isLoaded)(resolvedPropValue);
             var oldStateProp = _this.state && _this.state[path] && _this.state[path].value;
@@ -243,9 +269,14 @@ var firebaseConnect = function firebaseConnect() {
     });
     (0, _defineProperty2.default)(FirebaseConnect, "displayName", "FirebaseConnect(".concat(getDisplayName(WrappedComponent), ")"));
     (0, _defineProperty2.default)(FirebaseConnect, "wrappedComponent", WrappedComponent);
-    return (0, _hoistNonReactStatics.default)(FirebaseConnect, WrappedComponent);
+    var component = (0, _hoistNonReactStatics.default)(FirebaseConnect, WrappedComponent);
+
+    if (!connect) {
+      return component;
+    }
+
+    return connect(connectListeners)(component);
   };
 };
 
-var _default = firebaseConnect;
-exports.default = _default;
+exports.firebaseConnect = firebaseConnect;

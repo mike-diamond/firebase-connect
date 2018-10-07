@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import isEqual from 'lodash/isEqual'
 import hoistStatics from 'hoist-non-react-statics'
-import { dataToJS, isLoaded } from 'react-redux-firebase'
+import { dataToJS, isLoaded, reactReduxFirebase, firebaseStateReducer, getFirebase } from 'react-redux-firebase'
 import { watchEvents, unWatchEvents } from 'react-redux-firebase/lib/actions/query'
 import { getEventsFromInput, createCallable } from 'react-redux-firebase/lib/utils'
 
@@ -35,7 +35,9 @@ const getDisplayName = Component => (
 )
 
 
-const firebaseConnect = (dataOrFn = {}) => WrappedComponent => {
+const firebaseConnect = (dataOrFn = {}, connect) => WrappedComponent => {
+  const connectListeners = {}
+
   class FirebaseConnect extends Component {
     firebaseEvents = []
 
@@ -151,6 +153,7 @@ const firebaseConnect = (dataOrFn = {}) => WrappedComponent => {
         const { path, defaultValue } = prevData[propName]
 
         let resolvedPropValue       = dataToJS(state.firebase, path)
+        connectListeners[propName]  = (state) => dataToJS(state.firebase, path)
 
         const loadedPropName        = `isLoaded${propName[0].toUpperCase()}${propName.substr(1)}`
 
@@ -212,8 +215,19 @@ const firebaseConnect = (dataOrFn = {}) => WrappedComponent => {
     }
   }
 
-  return hoistStatics(FirebaseConnect, WrappedComponent)
+  const component = hoistStatics(FirebaseConnect, WrappedComponent)
+
+  if (!connect) {
+    return component
+  }
+
+  return connect(connectListeners)(component)
 }
 
 
-export default firebaseConnect
+export {
+  getFirebase,
+  firebaseConnect,
+  reactReduxFirebase,
+  firebaseStateReducer,
+}

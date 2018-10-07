@@ -1,6 +1,6 @@
 {
   "name": "firebase-connect",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Get data from firebase and store it into props",
   "main": "index.js",
   "scripts": {

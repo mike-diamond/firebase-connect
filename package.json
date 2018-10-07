@@ -1,6 +1,6 @@
 {
   "name": "firebase-connect",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "Get data from firebase and store it into props",
   "main": "index.js",
   "scripts": {
@@ -22,7 +22,7 @@
     "lodash": "^4.17.11",
     "prop-types": "^15.6.2",
     "react": "^16.5.2",
-    "react-redux-firebase": "^2.1.8"
+    "react-redux-firebase": "~2.1.8"
   },
   "devDependencies": {
     "@babel/cli": "^7.1.2",

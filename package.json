@@ -1,0 +1,33 @@
+{
+  "name": "firebase-connect",
+  "version": "1.0.0",
+  "description": "Get data from firebase and store it into props",
+  "main": "index.js",
+  "scripts": {
+    "transpile": "babel ./src --out-dir ./dist",
+    "minify": "minify ./dist/index.js -d .",
+    "build": "npm run transpile && npm run minify"
+  },
+  "keywords": [
+    "firebase",
+    "connect"
+  ],
+  "author": "Mike Diamond",
+  "license": "MIT",
+  "dependencies": {
+    "hoist-non-react-statics": "^3.0.1",
+    "lodash": "^4.17.11",
+    "prop-types": "^15.6.2",
+    "react": "^16.5.2",
+    "react-redux-firebase": "^2.1.8"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.1.2",
+    "@babel/core": "^7.1.2",
+    "@babel/plugin-proposal-class-properties": "^7.1.0",
+    "@babel/plugin-transform-react-jsx": "^7.0.0",
+    "@babel/plugin-transform-runtime": "^7.1.0",
+    "@babel/preset-env": "^7.0.0",
+    "babel-minify": "^0.5.0"
+  }
+}

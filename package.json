@@ -1,6 +1,6 @@
 {
   "name": "firebase-connect",
-  "version": "1.0.9",
+  "version": "1.1.0",
   "description": "Get data from firebase and store it into props",
   "main": "index.js",
   "scripts": {
@@ -19,7 +19,6 @@
   "license": "MIT",
   "dependencies": {
     "hoist-non-react-statics": "^3.0.1",
-    "lodash": "^4.17.11",
     "prop-types": "^15.6.2",
     "react": "^16.5.2",
     "react-redux-firebase": "~2.1.8"

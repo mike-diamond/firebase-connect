@@ -1,6 +1,5 @@
 import React, { PureComponent } from 'react'
 import PropTypes from 'prop-types'
-import isEqual from 'lodash/isEqual'
 import hoistStatics from 'hoist-non-react-statics'
 import { dataToJS, isLoaded, reactReduxFirebase, firebaseStateReducer, getFirebase } from 'react-redux-firebase'
 import { watchEvents, unWatchEvents } from 'react-redux-firebase/lib/actions/query'
@@ -111,9 +110,7 @@ const firebaseConnect = (dataOrFn = {}, connect) => WrappedComponent => {
         watchEvents(firebase, dispatch, this.firebaseEvents)
       }
 
-      if (!isEqual(stateProps, this.state)) {
-        this.setState(stateProps)
-      }
+      this.setState(stateProps)
     }
 
     getUpdatedEvents = (data) => {

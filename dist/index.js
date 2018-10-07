@@ -51,8 +51,6 @@ var _react = _interopRequireWildcard(require("react"));
 
 var _propTypes = _interopRequireDefault(require("prop-types"));
 
-var _isEqual = _interopRequireDefault(require("lodash/isEqual"));
-
 var _hoistNonReactStatics = _interopRequireDefault(require("hoist-non-react-statics"));
 
 var _reactReduxFirebase = require("react-redux-firebase");
@@ -239,9 +237,7 @@ var firebaseConnect = function firebaseConnect() {
             (0, _query.watchEvents)(firebase, dispatch, this.firebaseEvents);
           }
 
-          if (!(0, _isEqual.default)(stateProps, this.state)) {
-            this.setState(stateProps);
-          }
+          this.setState(stateProps);
         }
       }, {
         key: "render",

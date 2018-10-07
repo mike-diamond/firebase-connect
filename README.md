@@ -77,7 +77,7 @@ import { firebaseConnect } from 'firebase-connect'
         users: Object.keys(chat.users).map((key) => chat.users[key]),
       })),
   },
-  // pass connect as second parameter to rerender component when data is changed
+  // pass connect as second parameter to rerender component when data is received
 }), connect)
 export default class Chat extends PureComponent {
 

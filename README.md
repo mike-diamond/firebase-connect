@@ -2,6 +2,10 @@
 HOC for connecting to firebase realtime database.
 Based on [react-redux-firebase](https://github.com/prescottprue/react-redux-firebase) to improve connection to firebase.
 
+[![Npm Version](https://badge.fury.io/js/firebase-connect.svg)](https://www.npmjs.com/package/firebase-connect)
+[![Month Downloads](https://img.shields.io/npm/dm/firebase-connect.svg)](http://npm-stat.com/charts.html?package=firebase-connect)
+[![Npm Licence](https://img.shields.io/npm/l/firebase-connect.svg)](https://www.npmjs.com/package/firebase-connect)
+
 ### How firebase-connect improves react-redux-firebase
 - It stores received data for each `path` from realtime database 
 as long as the component with this HOC is mounted

@@ -165,7 +165,7 @@ const App = () => (
 render(<App/>, document.getElementById('root'));
 ```
 
-The Firebase instance (for example in actions) can then be grabbed using getFirebase function
+The Firebase instance can then be grabbed using getFirebase function (for example in actions)
 
 ```
 import { getFirebase } from 'firebase-connect'

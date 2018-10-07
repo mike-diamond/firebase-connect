@@ -1,6 +1,6 @@
 {
   "name": "firebase-connect",
-  "version": "1.0.1",
+  "version": "1.0.3",
   "description": "Get data from firebase and store it into props",
   "main": "index.js",
   "scripts": {
@@ -10,7 +10,10 @@
   },
   "keywords": [
     "firebase",
-    "connect"
+    "connect",
+    "react",
+    "redux",
+    "store"
   ],
   "author": "Mike Diamond",
   "license": "MIT",

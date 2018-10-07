@@ -154,9 +154,9 @@ var firebaseConnect = function firebaseConnect() {
             var canMerge = (0, _typeof2.default)(oldStateProp) === 'object' && (0, _typeof2.default)(resolvedPropValue) === 'object';
 
             if (defaultValue && !isLoadedPropValue) {
-              resolvedPropValue = typeof defaultValue === 'function' ? defaultValue(state) : [state].concat(defaultValue.split('.')).reduce(function (a, b) {
+              resolvedPropValue = typeof defaultValue === 'function' ? defaultValue(state) : typeof defaultValue === 'string' && /\./.test(defaultValue) ? [state].concat(defaultValue.split('.')).reduce(function (a, b) {
                 return a[b];
-              });
+              }) : defaultValue;
               isLoadedPropValue = Boolean(resolvedPropValue);
             }
 

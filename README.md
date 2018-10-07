@@ -1,9 +1,18 @@
 # firebase-connect
 HOC for connecting to firebase realtime database.
-Based on react-redux-firebase to improve connection to firebase.
+Based on [react-redux-firebase](https://github.com/prescottprue/react-redux-firebase) to improve connection to firebase.
+
+### How firebase-connect improves react-redux-firebase
+- It stores received data for each `path` from realtime database 
+as long as the component with this HOC is mounted
+- It merges data of any number of listeners that you'll define
+- It creates boolean property `is${PropName}Loaded` that helps to define was the data loaded or not
+- You can set default value, that can be taken from your store or defined manually
+- You can modify received data
+
 
 ### Usage
-```
+```jsx
 import React, { PureComponent } from 'react'
 import PropTypes from 'prop-types'
 import connect from 'react-redux'
@@ -37,7 +46,7 @@ import { firebaseConnect } from 'firebase-connect'
         'limitToLast=25',
       ]
     ],
-    // Get default value from preloaded store (on SSR) or set it manualy
+    // Get default value from preloaded store (on SSR) or set it manually
     // It also can be used as a function: (state) => state.preload.chats || [],
     defaultValue: `preload.chatMessages.${props.activeChat}`,
     // Modify output result
@@ -113,10 +122,11 @@ export default class Chat extends PureComponent {
   }
 }
 ```
-Same as using react-redux-firebase you need to include reactReduxFirebase (store enhancer) and firebaseReducer (reducer)
-while creating your redux store:
 
-```
+Same as using react-redux-firebase you need to include `reactReduxFirebase` (store enhancer) and `firebaseReducer`
+(reducer) while creating your redux store:
+
+```jsx
 import React from 'react'
 import { render } from 'react-dom'
 import { Provider } from 'react-redux'
@@ -165,9 +175,10 @@ const App = () => (
 render(<App/>, document.getElementById('root'));
 ```
 
-The Firebase instance can then be grabbed using getFirebase function (for example in actions)
+The Firebase instance can be grabbed using `getFirebase` function
+(for example in actions or somewhere you can't apply the HOC)
 
-```
+```jsx
 import { getFirebase } from 'firebase-connect'
 
 

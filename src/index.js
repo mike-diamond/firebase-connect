@@ -165,7 +165,9 @@ const firebaseConnect = (dataOrFn = {}, connect) => WrappedComponent => {
         if (defaultValue && !isLoadedPropValue) {
           resolvedPropValue         = typeof defaultValue === 'function'
             ? defaultValue(state)
-            : [ state ].concat(defaultValue.split('.')).reduce((a, b) => a[b])
+            : typeof defaultValue === 'string' && /\./.test(defaultValue)
+              ? [ state ].concat(defaultValue.split('.')).reduce((a, b) => a[b])
+              : defaultValue
 
           isLoadedPropValue         = Boolean(resolvedPropValue)
         }

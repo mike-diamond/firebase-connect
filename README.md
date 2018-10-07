@@ -6,7 +6,8 @@ Based on [react-redux-firebase](https://github.com/prescottprue/react-redux-fire
 - It stores received data for each `path` from realtime database 
 as long as the component with this HOC is mounted
 - It merges data of any number of listeners that you'll define
-- It creates boolean property `is${PropName}Loaded` that helps to define was the data loaded or not
+- It creates property `${propName}` with received data and boolean property `is${PropName}Loaded` that helps to define
+was the data loaded or not
 - You can set default value, that can be taken from your store or defined manually
 - You can modify received data
 

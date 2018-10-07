@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { PureComponent } from 'react'
 import PropTypes from 'prop-types'
 import isEqual from 'lodash/isEqual'
 import hoistStatics from 'hoist-non-react-statics'
@@ -38,7 +38,7 @@ const getDisplayName = Component => (
 const firebaseConnect = (dataOrFn = {}, connect) => WrappedComponent => {
   const connectListeners = {}
 
-  class FirebaseConnect extends Component {
+  class FirebaseConnect extends PureComponent {
     firebaseEvents = []
 
     firebase = null

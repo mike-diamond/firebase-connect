@@ -94,8 +94,8 @@ var firebaseConnect = function firebaseConnect() {
 
     var FirebaseConnect =
     /*#__PURE__*/
-    function (_Component) {
-      (0, _inherits2.default)(FirebaseConnect, _Component);
+    function (_PureComponent) {
+      (0, _inherits2.default)(FirebaseConnect, _PureComponent);
 
       function FirebaseConnect(props, context) {
         var _this;
@@ -262,7 +262,7 @@ var firebaseConnect = function firebaseConnect() {
         }
       }]);
       return FirebaseConnect;
-    }(_react.Component);
+    }(_react.PureComponent);
 
     (0, _defineProperty2.default)(FirebaseConnect, "contextTypes", {
       store: _propTypes.default.object.isRequired

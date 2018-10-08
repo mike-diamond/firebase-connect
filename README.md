@@ -25,6 +25,7 @@ import { firebaseConnect } from 'firebase-connect'
 
 
 @connect({
+  activeChat: (state) => state.activeChat.name,
   endAt: (state) => state.activeChat.endAt,
 })
 @firebaseConnect((props) => ({

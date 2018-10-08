@@ -1,7 +1,12 @@
 import React, { PureComponent } from 'react'
 import PropTypes from 'prop-types'
 import hoistStatics from 'hoist-non-react-statics'
-import { dataToJS, isLoaded, reactReduxFirebase, firebaseStateReducer, getFirebase } from 'react-redux-firebase'
+import {
+  isLoaded,
+  reactReduxFirebase,
+  getFirebase,
+  firebaseReducer,
+} from 'react-redux-firebase'
 import { watchEvents, unWatchEvents } from 'react-redux-firebase/lib/actions/query'
 import { getEventsFromInput, createCallable } from 'react-redux-firebase/lib/utils'
 
@@ -149,8 +154,9 @@ const firebaseConnect = (dataOrFn = {}, connect) => WrappedComponent => {
       Object.keys(prevData).forEach((propName) => {
         const { path, defaultValue } = prevData[propName]
 
-        let resolvedPropValue       = dataToJS(state.firebase, path)
-        connectListeners[propName]  = (state) => dataToJS(state.firebase, path)
+        let resolvedPropValue       = [ state.firebase.data ].concat(path.split('/')).reduce((a, b) => a && a[b])
+
+        connectListeners[propName]  = (state) => [ state.firebase.data ].concat(path.split('/')).reduce((a, b) => a && a[b])
 
         const loadedPropName        = `isLoaded${propName[0].toUpperCase()}${propName.substr(1)}`
 
@@ -228,5 +234,5 @@ export {
   getFirebase,
   firebaseConnect,
   reactReduxFirebase,
-  firebaseStateReducer,
+  firebaseReducer,
 }

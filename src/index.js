@@ -154,9 +154,9 @@ const firebaseConnect = (dataOrFn = {}, connect) => WrappedComponent => {
       Object.keys(prevData).forEach((propName) => {
         const { path, defaultValue } = prevData[propName]
 
-        let resolvedPropValue       = [ state.firebase.data ].concat(path.split('/')).reduce((a, b) => a && a[b])
+        let resolvedPropValue       = state.firebase && state.firebase.data && [ state.firebase.data ].concat(path.split('/')).reduce((a, b) => a && a[b])
 
-        connectListeners[propName]  = (state) => [ state.firebase.data ].concat(path.split('/')).reduce((a, b) => a && a[b])
+        connectListeners[propName]  = (state) => state.firebase && state.firebase.data && [ state.firebase.data ].concat(path.split('/')).reduce((a, b) => a && a[b])
 
         const loadedPropName        = `isLoaded${propName[0].toUpperCase()}${propName.substr(1)}`
 

@@ -6,6 +6,7 @@ Based on [react-redux-firebase](https://github.com/prescottprue/react-redux-fire
 
 [SOURCE OF DEMO APP](https://github.com/mike-diamond/react-firebase-ssr-boilerplate)
 
+
 [![Npm Version](https://badge.fury.io/js/firebase-connect.svg)](https://www.npmjs.com/package/firebase-connect)
 [![Month Downloads](https://img.shields.io/npm/dm/firebase-connect.svg)](http://npm-stat.com/charts.html?package=firebase-connect)
 [![Npm Licence](https://img.shields.io/npm/l/firebase-connect.svg)](https://www.npmjs.com/package/firebase-connect)

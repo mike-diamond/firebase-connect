@@ -11,6 +11,9 @@ Based on [react-redux-firebase](https://github.com/prescottprue/react-redux-fire
 [![Month Downloads](https://img.shields.io/npm/dm/firebase-connect.svg)](http://npm-stat.com/charts.html?package=firebase-connect)
 [![Npm Licence](https://img.shields.io/npm/l/firebase-connect.svg)](https://www.npmjs.com/package/firebase-connect)
 
+### Instalation
+`npm install --save firebase-connect`
+
 ### How firebase-connect improves react-redux-firebase
 - It stores received data for each `path` from realtime database 
 as long as the component with this HOC is mounted

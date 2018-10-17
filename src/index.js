@@ -3,15 +3,18 @@ import PropTypes from 'prop-types'
 import hoistStatics from 'hoist-non-react-statics'
 import {
   isLoaded,
-  reactReduxFirebase,
   getFirebase,
   firebaseReducer,
+  reactReduxFirebase,
 } from 'react-redux-firebase'
 import { watchEvents, unWatchEvents } from 'react-redux-firebase/lib/actions/query'
+import { reduxFirestore, firestoreReducer } from 'redux-firestore'
 import { getEventsFromInput, createCallable } from 'react-redux-firebase/lib/utils'
 
 
-const _getEventsFromInput = (data) => {
+const fb = 'firebase'
+
+const _getEventsFromInput = (data, type) => {
   const inputs = []
 
   if (!data) {
@@ -24,6 +27,7 @@ const _getEventsFromInput = (data) => {
     listeners.forEach((listener) => {
       inputs.push({
         path,
+        [type === fb ? 'path' : 'collection']: path,
         queryParams: listener,
       })
     })
@@ -39,7 +43,7 @@ const getDisplayName = Component => (
 )
 
 
-const firebaseConnect = (dataOrFn = {}, connect) => WrappedComponent => {
+const _connect = (type) => (dataOrFn = {}, connect) => WrappedComponent => {
   const connectListeners = {}
 
   class FirebaseConnect extends PureComponent {
@@ -53,17 +57,17 @@ const firebaseConnect = (dataOrFn = {}, connect) => WrappedComponent => {
       store: PropTypes.object.isRequired
     }
 
-    static displayName       = `FirebaseConnect(${getDisplayName(WrappedComponent)})`
+    static displayName       = `F${type.slice(1)}Connect(${getDisplayName(WrappedComponent)})`
 
     static wrappedComponent  = WrappedComponent
 
     constructor(props, context) {
-      const { store: { firebase } } = context
+      const { store } = context
 
       super()
 
       const inputAsFunc  = createCallable(dataOrFn)
-      const prevData     = inputAsFunc(props, firebase)
+      const prevData     = inputAsFunc(props, store)
 
       this.prevData      = prevData
       this.context       = context
@@ -71,35 +75,53 @@ const firebaseConnect = (dataOrFn = {}, connect) => WrappedComponent => {
     }
 
     componentWillMount() {
-      const { store: { firebase } } = this.context
+      const { store } = this.context
 
-      if (firebase) {
-        const { ref, helpers, storage, database, auth } = firebase
+      if (store[type]) {
+        const { ref, helpers, storage, database, auth } = store[type]
         this.firebase = { ref, storage, database, auth, ...helpers }
 
-        this.firebaseEvents = _getEventsFromInput(this.prevData)
+        this.firebaseEvents = _getEventsFromInput(this.prevData, type)
       }
     }
 
     componentDidMount() {
-      const { store: { firebase, dispatch } } = this.context
+      const { store } = this.context
 
-      if (firebase) {
-        watchEvents(firebase, dispatch, this.firebaseEvents)
+      if (store[type]) {
+        this.watchEvents(store[type], store.dispatch, this.firebaseEvents)
       }
     }
 
     componentWillUnmount() {
-      const { store: { firebase, dispatch } } = this.context
+      const { store } = this.context
 
-      unWatchEvents(firebase, dispatch, this.firebaseEvents)
+      this.unWatchEvents(store[type], store.dispatch, this.firebaseEvents)
+    }
+
+    watchEvents = (firebase, dispatch, events) => {
+      if (type === fb) {
+        watchEvents(firebase, dispatch, events)
+      }
+      else {
+        firebase.setListeners(events)
+      }
+    }
+
+    unWatchEvents = (firebase, dispatch, events) => {
+      if (type === fb) {
+        unWatchEvents(firebase, dispatch, events)
+      }
+      else {
+        firebase.unsetListeners(events)
+      }
     }
 
     componentWillReceiveProps(props) {
-      const { store: { firebase, dispatch } } = this.context
+      const { store } = this.context
 
       const inputAsFunc  = createCallable(dataOrFn)
-      const data         = inputAsFunc(props, firebase)
+      const data         = inputAsFunc(props, store)
 
       const { addedEvents, removedEvents } = this.getUpdatedEvents(data)
 
@@ -108,18 +130,18 @@ const firebaseConnect = (dataOrFn = {}, connect) => WrappedComponent => {
       if (addedEvents.length || removedEvents.length) {
         this.prevData = data
 
-        unWatchEvents(firebase, dispatch, this.firebaseEvents)
+        this.unWatchEvents(store[type], store.dispatch, this.firebaseEvents)
 
-        this.firebaseEvents = _getEventsFromInput(data)
+        this.firebaseEvents = _getEventsFromInput(data, type)
 
-        watchEvents(firebase, dispatch, this.firebaseEvents)
+        this.watchEvents(store[type], store.dispatch, this.firebaseEvents)
       }
 
       this.setState(stateProps)
     }
 
     getUpdatedEvents = (data) => {
-      const newFirebaseEvents = _getEventsFromInput(data)
+      const newFirebaseEvents = _getEventsFromInput(data, type)
       const oldFirebaseEvents = this.firebaseEvents
 
       const addedEvents = []
@@ -154,9 +176,9 @@ const firebaseConnect = (dataOrFn = {}, connect) => WrappedComponent => {
       Object.keys(prevData).forEach((propName) => {
         const { path, defaultValue } = prevData[propName]
 
-        let resolvedPropValue       = state.firebase && state.firebase.data && [ state.firebase.data ].concat(path.split('/')).reduce((a, b) => a && a[b])
+        let resolvedPropValue       = state[type] && state[type].data && [ state[type].data ].concat(path.split('/')).reduce((a, b) => a && a[b])
 
-        connectListeners[propName]  = (state) => state.firebase && state.firebase.data && [ state.firebase.data ].concat(path.split('/')).reduce((a, b) => a && a[b])
+        connectListeners[propName]  = (state) => state[type] && state[type].data && [ state[type].data ].concat(path.split('/')).reduce((a, b) => a && a[b])
 
         const loadedPropName        = `isLoaded${propName[0].toUpperCase()}${propName.substr(1)}`
 
@@ -229,10 +251,19 @@ const firebaseConnect = (dataOrFn = {}, connect) => WrappedComponent => {
   return connect(connectListeners)(component)
 }
 
+const firebaseConnect   = _connect(fb)
+const firestoreConnect  = _connect('firestore')
+const reduxFirebase     = reactReduxFirebase
 
 export {
   getFirebase,
   firebaseConnect,
+  firestoreConnect,
+
+  reduxFirestore,
+  firestoreReducer,
+
   reactReduxFirebase,
+  reduxFirebase,
   firebaseReducer,
 }

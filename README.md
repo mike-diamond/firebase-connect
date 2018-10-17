@@ -29,13 +29,14 @@ was the data loaded or not
 import React, { PureComponent } from 'react'
 import PropTypes from 'prop-types'
 import connect from 'react-redux'
-import { firebaseConnect } from 'firebase-connect'
+import { firebaseConnect } from 'firebase-connect' // import firestoreConnect if you using firestore
 
 
 @connect({
   activeChat: (state) => state.activeChat.name,
   endAt: (state) => state.activeChat.endAt,
 })
+// set same props for @firestoreConnect() if you using firestore
 @firebaseConnect((props) => ({
   chatMessages: {
     // path to listen in firebase realtime database
@@ -137,7 +138,7 @@ export default class Chat extends PureComponent {
 }
 ```
 
-Same as using react-redux-firebase you need to include `reactReduxFirebase` (store enhancer) and `firebaseReducer`
+Same as using react-redux-firebase you need to include `reduxFirebase` (store enhancer) and `firebaseReducer`
 (reducer) while creating your redux store:
 
 ```jsx
@@ -145,9 +146,13 @@ import React from 'react'
 import { render } from 'react-dom'
 import { Provider } from 'react-redux'
 import { createStore, combineReducers, compose } from 'redux'
-import { reactReduxFirebase, firebaseReducer } from 'firebase-connect'
+import {
+  reduxFirebase,
+  firebaseReducer,
+  reduxFirestore, // <- needed if using firestore
+  firestoreReducer, // <- needed if using firestore
+} from 'firebase-connect'
 import firebase from 'firebase'
-// import { reduxFirestore, firestoreReducer } from 'redux-firestore' // <- needed if using firestore
 // import 'firebase/firestore' // <- needed if using firestore
 // import 'firebase/functions' // <- needed if using httpsCallable
 // Get firebase config (includes apiKey, authDomain, databaseURL, projectId, storageBucket, messagingSenderId)
@@ -157,12 +162,12 @@ import firebaseConfig from 'firebase-config.json'
 firebase.initializeApp(firebaseConfig)
 
 // Initialize other services on firebase instance
-// firebase.firestore() // <- needed if using firestore
+// firebase.firestore().settings({ timestampsInSnapshots: true }) // <- needed if using firestore
 // firebase.functions() // <- needed if using httpsCallable
 
-// Add reactReduxFirebase enhancer when making store creator
+// Add reduxFirebase enhancer when making store creator
 const createStoreWithFirebase = compose(
-  reactReduxFirebase(firebase, {
+  reduxFirebase(firebase, {
     userProfile: 'users',
     // useFirestoreForProfile: true // Firestore for Profile instead of Realtime DB
   }),
